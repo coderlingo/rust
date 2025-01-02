@@ -27,4 +27,53 @@ fn main() {
         }
         println!("Guess again!");
     }
+
+    println!("Creating a linked List now");
+    let mut input = String::new();
+    let mut size:u32 = match io::stdin().read_line(&mut input) {
+        Ok(n) => {
+           input.trim().parse().expect("Should be a number")
+        },
+        Err(error) => panic!("error: {error}"),
+    };
+    let mut head:Node<'_> = Node::create_node();
+    let mut prev:&Node<'_> = head;
+    for i in (0..size) {
+        let mut n:Node = Node {
+            val: i,
+            next: None,
+        };
+        match head {
+            None => {
+                head = n;
+                prev = Some(&n);
+            },
+            _ => {
+                println!("Head is initialized");
+                *prev.next = Some(&n);
+            }
+        };
+        prev = &n;
+    }
+
 }
+struct Node<'a> { 
+    val: u32,
+    next: Option<&'a Node<'a>>,
+    is_empty: bool,
+}
+
+impl Node<'_> {
+    fn create_node() -> Self{
+        Self{
+            next: None,
+            val: 1,
+            is_empty: true,
+        }
+    }
+    fn update_val(&mut self, val:u32) {
+        self.val = val;
+        self.is_empty = false;
+    }
+}
+
